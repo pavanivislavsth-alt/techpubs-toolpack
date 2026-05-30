@@ -1,0 +1,182 @@
+import sys
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
+    QLabel, QFileDialog, QTextEdit, QProgressBar, QMessageBox
+)
+from PyQt5.QtCore import Qt, QTimer
+from pptx import Presentation
+from pptx.util import Pt
+from pptx.enum.text import PP_PARAGRAPH_ALIGNMENT
+from pptx.enum.shapes import MSO_SHAPE_TYPE
+from pptx.dml.color import RGBColor
+
+class PPTCheckerApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("PPT Checker")
+        self.setGeometry(100, 100, 800, 600)
+        
+        # Main widget
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        layout = QVBoxLayout(central_widget)
+        
+        # Upload PPT button
+        self.upload_button = QPushButton("Upload PPT File")
+        self.upload_button.setStyleSheet("""
+            QPushButton {
+                background-color: #0A8276;
+                color: white;
+                padding: 10px;
+                border-radius: 10px;
+                font-size: 14px;
+            }
+            QPushButton:hover {
+                background-color: #08695F;
+            }
+            QPushButton:pressed {
+                background-color: #065C53;
+            }
+        """)
+        self.upload_button.clicked.connect(self.upload_ppt)
+        layout.addWidget(self.upload_button)
+        
+        # Progress bar
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setVisible(False)
+        layout.addWidget(self.progress_bar)
+        
+        # Result text box
+        self.result_text = QTextEdit()
+        self.result_text.setReadOnly(True)
+        self.result_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #f9f9f9;
+                padding: 10px;
+                border: 1px solid #cccccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+        """)
+        layout.addWidget(self.result_text)
+        
+        # Initialize variables
+        self.ppt_path = None
+
+    def upload_ppt(self):
+        # Open file dialog to select PPT file
+        self.ppt_path, _ = QFileDialog.getOpenFileName(self, "Upload PPT File", "", "PPT Files (*.pptx)")
+        if self.ppt_path:
+            self.result_text.clear()
+            self.progress_bar.setVisible(True)
+            self.progress_bar.setValue(0)
+            
+            # Simulate loading with a timer
+            self.timer = QTimer()
+            self.timer.timeout.connect(self.analyze_ppt)
+            self.timer.start(100)  # Start analysis after 100ms
+
+    def analyze_ppt(self):
+        self.timer.stop()
+        self.progress_bar.setValue(50)  # Show progress
+        
+        # Load the PPT file
+        try:
+            presentation = Presentation(self.ppt_path)
+            mistakes = self.check_ppt_rules(presentation)
+            
+            # Display mistakes
+            if mistakes:
+                self.result_text.setPlainText("\n".join(mistakes))
+            else:
+                self.result_text.setPlainText("No mistakes found. The PPT is perfect!")
+            
+            self.progress_bar.setValue(100)  # Complete progress
+            QTimer.singleShot(2000, lambda: self.progress_bar.setVisible(False))  # Hide progress bar after 2 seconds
+        
+        except Exception as e:
+            self.result_text.setPlainText(f"Error: {str(e)}")
+            self.progress_bar.setVisible(False)
+
+    def check_ppt_rules(self, presentation):
+        mistakes = []
+        
+        for i, slide in enumerate(presentation.slides):
+            # Check for "Review TRM"
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for paragraph in shape.text_frame.paragraphs:
+                        if "Review TRM" in paragraph.text:
+                            mistakes.append(f"Slide {i + 1}: Change 'Review TRM' to 'See reference manual'.")
+            
+            # Check for "chapter" with a number
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for paragraph in shape.text_frame.paragraphs:
+                        if "chapter" in paragraph.text.lower() and any(char.isdigit() for char in paragraph.text):
+                            mistakes.append(f"Slide {i + 1}: Ask JIRA owner to provide chapter name for '{paragraph.text}'.")
+            
+            # Check for double quotes
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for paragraph in shape.text_frame.paragraphs:
+                        if '""' in paragraph.text or "“" in paragraph.text or "”" in paragraph.text:
+                            mistakes.append(f"Slide {i + 1}: Change double quotes to single quotes in '{paragraph.text}'.")
+            
+            # Check non-bullet starting sentences for font size 16
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for paragraph in shape.text_frame.paragraphs:
+                        if paragraph.level == 0 and not paragraph.text.strip().startswith(("•", "▪", "■", "-")):
+                            if paragraph.font.size != Pt(16):
+                                mistakes.append(f"Slide {i + 1}: Non-bullet starting sentence should be size 16: '{paragraph.text}'.")
+            
+            # Check alignment of first bullet with slide heading
+            if slide.shapes.title and slide.shapes.title.text:
+                title_text = slide.shapes.title.text
+                for shape in slide.shapes:
+                    if shape.has_text_frame:
+                        for paragraph in shape.text_frame.paragraphs:
+                            if paragraph.level == 0 and paragraph.text.strip().startswith(("•", "▪", "■", "-")):
+                                if paragraph.alignment != PP_PARAGRAPH_ALIGNMENT.LEFT:
+                                    mistakes.append(f"Slide {i + 1}: First bullet should be aligned properly with slide heading: '{title_text}'.")
+            
+            # Check follow-up words in sentences/headers for lowercase
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for paragraph in shape.text_frame.paragraphs:
+                        words = paragraph.text.split()
+                        for j in range(1, len(words)):
+                            if words[j].isupper() and len(words[j]) > 1:
+                                mistakes.append(f"Slide {i + 1}: Follow-up words should be lowercase: '{paragraph.text}'.")
+            
+            # Check tables for borders and empty data
+            for shape in slide.shapes:
+                if shape.shape_type == MSO_SHAPE_TYPE.TABLE:
+                    table = shape.table
+                    for row in range(len(table.rows)):
+                        for col in range(len(table.columns)):
+                            cell = table.cell(row, col)
+                            # Check for empty cells
+                            if cell.text.strip() == "":
+                                mistakes.append(f"Slide {i + 1}: Fill empty cell at row {row + 1}, column {col + 1} with 'En dash'.")
+                            # Check for borders
+                            for border_side in ['top', 'bottom', 'left', 'right']:
+                                border = getattr(cell, f"border_{border_side}")
+                                if border.line.color.rgb != RGBColor(255, 255, 255):  # Check if border is not white (default)
+                                    mistakes.append(f"Slide {i + 1}: Remove borders for tables at row {row + 1}, column {col + 1}.")
+            
+            # Check bullets ending with full stops
+            for shape in slide.shapes:
+                if shape.has_text_frame:
+                    for paragraph in shape.text_frame.paragraphs:
+                        if paragraph.level > 0 and paragraph.text.strip().endswith("."):
+                            mistakes.append(f"Slide {i + 1}: Remove full stops at the end of bullets: '{paragraph.text}'.")
+        
+        return mistakes
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = PPTCheckerApp()
+    window.show()
+    sys.exit(app.exec_())

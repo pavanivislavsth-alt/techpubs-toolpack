@@ -1,0 +1,162 @@
+\documentclass[10pt,a4paper]{article}
+
+% -------------------- Packages --------------------
+\usepackage[left=1.1cm, right=1.1cm, top=0.65cm, bottom=0.65cm]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{ragged2e}
+
+% -------------------- Global Formatting --------------------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\pagenumbering{gobble}
+\linespread{0.90}
+
+% -------------------- Section Formatting --------------------
+\titleformat{\section}
+{\normalsize\bfseries}
+{}
+{0pt}
+{}
+
+\titlespacing{\section}{0pt}{6pt}{3pt}
+
+\newcommand{\sectionline}{
+\vspace{-2pt}
+\hrule
+\vspace{4pt}
+}
+
+% -------------------- Bullet Style --------------------
+\setlist[itemize]{
+leftmargin=1.2em,
+itemsep=1.2pt,
+topsep=1pt,
+parsep=0pt,
+partopsep=0pt,
+label=\textbullet
+}
+
+% -------------------- Link Style --------------------
+\hypersetup{
+colorlinks=true,
+urlcolor=blue
+}
+
+% -------------------- Document --------------------
+\begin{document}
+
+\small
+
+% -------------------- Header --------------------
+\begin{center}
+{\Large \textbf{PAVANI VISLAVATH}}\\[2pt]
+\href{mailto:pavanivislavsth@gmail.com}{pavanivislavsth@gmail.com}
+\,|\, +91 6281696866
+\,|\, \href{https://linkedin.com/in/pavani-vislavath-119180265}{LinkedIn}
+\,|\, \href{https://github.com/21b01a05j2}{GitHub}
+\,|\, Andhra Pradesh, India
+\end{center}
+
+\vspace{4pt}
+
+% -------------------- Professional Summary --------------------
+\section*{PROFESSIONAL SUMMARY}
+\sectionline
+Results-driven Software Developer with 1+ year of experience in full-stack development, backend API development, automation, and data-driven applications. Proficient in Python, FastAPI, JavaScript, SQL, AWS S3, and OutSystems. Proven track record of building scalable, production-ready systems, reducing manual workflows by 80\%, improving data accuracy to 95\%, and saving 60+ hours per month through automation. Experienced in Agile/Scrum methodologies, RESTful API design, CI/CD pipelines, object-oriented programming (OOP), and cross-functional team collaboration.
+
+% -------------------- Education --------------------
+\section*{EDUCATION}
+\sectionline
+\textbf{Shri Vishnu Engineering College for Women} \hfill Andhra Pradesh, India\\
+B.Tech in Computer Science \& Engineering \hfill Dec 2021 -- May 2025
+
+% -------------------- Experience --------------------
+\section*{WORK EXPERIENCE}
+\sectionline
+
+\textbf{Infineon Technologies} \hfill Bangalore, India\\
+\textbf{Software Specialist} \hfill June 2025 -- Present
+\begin{itemize}
+\item Architected and deployed a full-stack Metrics Tracker application serving 50+ users for production data management and real-time analytics using Python, FastAPI, JavaScript, and Amazon S3.
+\item Designed and implemented 15+ RESTful API endpoints with input validation, error handling, and automated scheduled reporting, reducing report generation time by 60\%.
+\item Built role-based access control (RBAC), interactive dashboards with filtering and sorting, and dynamic forms, improving data entry speed by 40\%.
+\item Led requirement gathering sessions with stakeholders, performed code reviews, and delivered production deployments following Agile/Scrum sprints and CI/CD pipelines.
+\end{itemize}
+
+\textbf{Web Developer Intern} \hfill July 2024 -- May 2025
+\begin{itemize}
+\item Developed and launched a full-stack Metrics Tracker application on OutSystems platform with responsive UI, dynamic dashboards, and role-based access for 3 user groups.
+\item Integrated REST APIs and built server-side workflows connecting OutSystems Service Studio, SQL databases, and AWS S3 for automated data ingestion and storage.
+\item Automated 12+ production tracking and reporting workflows, reducing manual data entry by 80\% and improving data accuracy from 78\% to 95\%.
+\item Conducted unit testing, integration testing, and performance profiling, resolving 30+ bugs and achieving 99.5\% application uptime.
+\end{itemize}
+
+\textbf{MoBhiSure} \hfill Dec 2023 -- Feb 2024\\
+\textbf{Full Stack Developer Intern}
+\begin{itemize}
+\item Engineered an automated web scraping pipeline using Python, Selenium, and Azure, extracting and processing 5,000+ structured job listings from 5+ sources daily.
+\item Developed backend REST APIs and integrated Azure ML pipelines for automated data preprocessing, feature engineering, and model inference workflows.
+\item Trained and optimized a Random Forest classifier achieving 92\% prediction accuracy (F1: 0.89) through hyperparameter tuning, cross-validation, and feature selection.
+\item Reduced pipeline execution time by 35\% through asynchronous processing and error-retry mechanisms.
+\end{itemize}
+
+% -------------------- Projects --------------------
+\section*{PROJECTS}
+\sectionline
+
+\textbf{Infineon ToolPack} \textbar{} Python, PyQt5, Selenium, Pandas, OS, Subprocess
+\begin{itemize}
+\item Built 5+ automation tools (PDF comparison, broken link checker, CMS fetcher, trademark validator) using Python and PyQt5 GUI framework.
+\item Automated workflows across 4 departments, reducing task completion time by 75\% and saving 60+ hours per month.
+\item Focused on clean, reusable, object-oriented code and performance optimization to improve efficiency and maintainability.
+\end{itemize}
+
+\textbf{Metrics Tracker Web Application} \textbar{} HTML, CSS, JavaScript, FastAPI, Amazon S3
+\begin{itemize}
+\item Built a full-stack production tracking system with dynamic dashboards, automated reporting, and real-time analytics.
+\item Integrated FastAPI backend with Amazon S3 for scalable data storage and responsive frontend interfaces using HTML, CSS, and JavaScript.
+\item Automated reporting workflows, reducing manual effort by 80\% and improving data accuracy to 95\%.
+\end{itemize}
+
+\textbf{Voice Assistant} \textbar{} Python, SpeechRecognition, Pyttsx3, Selenium, PyAutoGUI, APIs
+\begin{itemize}
+\item Developed a Python-based voice assistant supporting 10+ commands including web search, YouTube, WhatsApp messaging, Wikipedia, and system automation.
+\item Integrated Google Speech Recognition, OpenWeatherMap, and News APIs for real-time voice-driven information retrieval.
+\item Automated browser and desktop workflows using Selenium and PyAutoGUI, reducing manual navigation time by 70\%.
+\end{itemize}
+
+\textbf{PySeleniumJobScraper} \textbar{} Python, Selenium, Azure ML, Pandas, Scikit-learn
+\begin{itemize}
+\item Built a Selenium-based web scraping system extracting 5,000+ structured job listings from 5+ platforms daily.
+\item Automated data preprocessing and feature engineering pipelines using Pandas and Azure ML, cutting data cleaning time by 50\%.
+\item Trained a Random Forest classifier achieving 92\% accuracy (F1: 0.89) via hyperparameter tuning and 5-fold cross-validation.
+\end{itemize}
+
+% -------------------- Skills --------------------
+\section*{TECHNICAL SKILLS}
+\sectionline
+\textbf{Programming Languages:} Python, SQL, JavaScript, HTML, CSS, Data Structures \& Algorithms\\
+\textbf{Frameworks \& Libraries:} FastAPI, Pandas, NumPy, Selenium, PyQt5, Scikit-learn, SpeechRecognition\\
+\textbf{Web \& API Development:} REST APIs, RESTful API Design, Responsive Web Design, OutSystems\\
+\textbf{Databases \& Storage:} MySQL, Amazon S3, AWS S3\\
+\textbf{Cloud \& DevOps:} Azure ML, AWS, Git, GitHub, CI/CD Pipelines, Postman\\
+\textbf{Methodologies:} Agile, Scrum, Object-Oriented Programming (OOP), SDLC, Code Review\\
+\textbf{Data \& AI Tools:} Tableau, ChatGPT, Claude, Microsoft Copilot\\
+\textbf{Soft Skills:} Problem Solving, Analytical Thinking, Communication, Team Collaboration
+
+% -------------------- Certifications & Achievements --------------------
+\section*{CERTIFICATIONS \& ACHIEVEMENTS}
+\sectionline
+\begin{itemize}
+\item \textbf{Amazon ML Summer School 2023} -- Selected among top candidates for machine learning intensive program by Amazon
+\item \textbf{Smart Project 2025 Finalist} -- Infineon Technologies, ToolPack project shortlisted for company-wide innovation contest
+\item \textbf{1st Place} -- Inter-College Technical Paper Presentation on AI, SVECW 2023
+\item Solved 300+ Data Structures \& Algorithms problems on LeetCode and HackerRank
+\end{itemize}
+
+\end{document}
